@@ -2,6 +2,14 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { RefreshCw, Play, Plus, Minus } from 'lucide-react';
 
+const broadcastServiceChange = (newServiceId: number) => {
+    supabase.channel('tv-control').send({
+        type: 'broadcast',
+        event: 'service-change',
+        payload: { serviceId: newServiceId },
+    });
+};
+
 export const AdminDashboard = () => {
     const [serviceId, setServiceId] = useState<1 | 2>(1);
     const [teams, setTeams] = useState<any[]>([]);
@@ -253,13 +261,13 @@ export const AdminDashboard = () => {
 
                 <div className="flex bg-gray-800 rounded-lg overflow-hidden">
                     <button
-                        onClick={() => setServiceId(1)}
+                        onClick={() => { setServiceId(1); broadcastServiceChange(1); }}
                         className={`px-6 py-3 font-bold uppercase transition-colors ${serviceId === 1 ? 'bg-mama-pink text-white' : 'text-gray-400 hover:text-white'}`}
                     >
                         Service 1
                     </button>
                     <button
-                        onClick={() => setServiceId(2)}
+                        onClick={() => { setServiceId(2); broadcastServiceChange(2); }}
                         className={`px-6 py-3 font-bold uppercase transition-colors ${serviceId === 2 ? 'bg-mama-pink text-white' : 'text-gray-400 hover:text-white'}`}
                     >
                         Service 2

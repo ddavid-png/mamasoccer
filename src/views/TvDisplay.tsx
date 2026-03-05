@@ -14,48 +14,50 @@ export const TvDisplay = () => {
     const [timeRemaining, setTimeRemaining] = useState<number>(0);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchData();
+    // Use a ref so fetchData always uses the latest serviceId
+    const serviceIdRef = { current: serviceId };
 
-        // Listen to ALL matches and state changes (both services) for auto-detect
-        const channel = supabase
-            .channel('tv-channel')
+    useEffect(() => {
+        serviceIdRef.current = serviceId;
+        fetchData(serviceId);
+    }, [serviceId]);
+
+    useEffect(() => {
+        // Listen for data changes
+        const dataChannel = supabase
+            .channel('tv-data-channel')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'matches' }, () => {
-                fetchData();
+                fetchData(serviceIdRef.current);
             })
             .on('postgres_changes', { event: '*', schema: 'public', table: 'tournament_state' }, () => {
-                fetchData();
+                fetchData(serviceIdRef.current);
+            })
+            .subscribe();
+
+        // Listen for admin service selection broadcasts
+        const controlChannel = supabase
+            .channel('tv-control')
+            .on('broadcast', { event: 'service-change' }, (payload: any) => {
+                const newService = payload.payload?.serviceId;
+                if (newService === 1 || newService === 2) {
+                    setServiceId(newService);
+                }
             })
             .subscribe();
 
         return () => {
-            supabase.removeChannel(channel);
+            supabase.removeChannel(dataChannel);
+            supabase.removeChannel(controlChannel);
         };
     }, []);
 
-    const fetchData = async () => {
-        // Fetch matches for BOTH services to auto-detect active one
-        const { data: allMatches } = await supabase.from('matches').select('*, team1:team1_id(name), team2:team2_id(name)').order('round', { ascending: false });
+    const fetchData = async (sId: number) => {
+        const { data: matchesData } = await supabase.from('matches').select('*, team1:team1_id(name), team2:team2_id(name)').eq('service_id', sId).order('round', { ascending: false });
 
-        if (allMatches) {
-            // Auto-detect: which service has active matches?
-            const s1Active = allMatches.some(m => m.service_id === 1 && m.status === 'active');
-            const s2Active = allMatches.some(m => m.service_id === 2 && m.status === 'active');
+        if (matchesData) setMatches(matchesData);
 
-            let activeService = defaultService;
-            if (s1Active && !s2Active) activeService = 1;
-            else if (s2Active && !s1Active) activeService = 2;
-            // If both active or neither, keep current/default
-
-            setServiceId(activeService);
-            setMatches(allMatches.filter(m => m.service_id === activeService));
-        }
-
-        const { data: stateData } = await supabase.from('tournament_state').select('*').single();
-        // We'll fetch the state for the active service
-        const { data: activeState } = await supabase.from('tournament_state').select('*').eq('service_id', serviceId).single();
-        if (activeState) setTimerState(activeState);
-        else if (stateData) setTimerState(stateData);
+        const { data: stateData } = await supabase.from('tournament_state').select('*').eq('service_id', sId).single();
+        if (stateData) setTimerState(stateData);
 
         setLoading(false);
     };
