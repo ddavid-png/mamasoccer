@@ -26,9 +26,7 @@ Styling: Tailwind CSS + Framer Motion (for smooth bracket transitions and timer 
 Backend/Database: Supabase 
 keys: 
 
-https://pwqjzecwcjnbraggfejm.supabase.co
-secret key: <REMOVED_FOR_SECURITY>
-anon public key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3cWp6ZWN3Y2puYnJhZ2dmZWptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4MzY3MDMsImV4cCI6MjA2ODQxMjcwM30.x6PNLISPHAyonGCr3HPKzkzdr_3ShVuU0qek6M3_jOk
+
 
 
 3. User Views & Features
