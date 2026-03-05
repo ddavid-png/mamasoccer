@@ -31,11 +31,21 @@ const MatchBox = ({ match, activeMatches, isFinal = false, isAdminMode, onClick 
                     Finished
                 </div>
             )}
-            <div className={`px-2 py-1 text-[11px] font-bold uppercase truncate border-b border-gray-800 ${match.winner_id === match.team1_id ? 'text-white bg-gray-900' : match.winner_id ? 'text-gray-700' : 'text-gray-300'} ${!match.team1_id ? 'italic !text-gray-600' : ''}`}>
-                {match.team1?.name || (match.status === 'completed' && !match.team1_id ? 'BYE' : 'TBD')}
+            <div className={`flex justify-between items-center px-2 py-1 text-[11px] font-bold uppercase border-b border-gray-800 ${match.winner_id === match.team1_id ? 'text-white bg-gray-900' : match.winner_id ? 'text-gray-700' : 'text-gray-300'} ${!match.team1_id ? 'italic !text-gray-600' : ''}`}>
+                <span className="truncate mr-2">{match.team1?.name || (match.status === 'completed' && !match.team1_id ? 'BYE' : 'TBD')}</span>
+                {(match.status === 'active' || match.status === 'completed') && match.team1_id && (
+                    <span className={`font-black ${match.winner_id === match.team1_id ? 'text-mama-green' : ''}`}>
+                        {match.team1_score || 0}
+                    </span>
+                )}
             </div>
-            <div className={`px-2 py-1 text-[11px] font-bold uppercase truncate ${match.winner_id === match.team2_id ? 'text-white bg-gray-900' : match.winner_id ? 'text-gray-700' : 'text-gray-300'} ${!match.team2_id ? 'italic !text-gray-600' : ''}`}>
-                {match.team2?.name || (match.status === 'completed' && !match.team2_id ? 'BYE' : 'TBD')}
+            <div className={`flex justify-between items-center px-2 py-1 text-[11px] font-bold uppercase ${match.winner_id === match.team2_id ? 'text-white bg-gray-900' : match.winner_id ? 'text-gray-700' : 'text-gray-300'} ${!match.team2_id ? 'italic !text-gray-600' : ''}`}>
+                <span className="truncate mr-2">{match.team2?.name || (match.status === 'completed' && !match.team2_id ? 'BYE' : 'TBD')}</span>
+                {(match.status === 'active' || match.status === 'completed') && match.team2_id && (
+                    <span className={`font-black ${match.winner_id === match.team2_id ? 'text-mama-green' : ''}`}>
+                        {match.team2_score || 0}
+                    </span>
+                )}
             </div>
         </div>
     );
