@@ -62,7 +62,7 @@ export const BracketTree = ({ matches, isAdminMode = false, onMatchClick }: { ma
     const activeMatches = matches.filter(m => m.status === 'active');
 
     return (
-        <div className="flex w-full h-[400px] justify-between items-stretch bg-black/40 border border-gray-800 p-6 relative overflow-hidden">
+        <div className="flex w-full h-full justify-between items-stretch bg-black/40 border border-gray-800 p-4 relative overflow-hidden">
             {/* Subtle background branding */}
             <h2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10rem] font-black text-white/5 uppercase select-none pointer-events-none tracking-tighter mix-blend-overlay">Bracket</h2>
 
