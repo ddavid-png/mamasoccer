@@ -190,7 +190,10 @@ export const TvDisplay = () => {
                                     <p style={{ margin: 0, color: '#6b7280', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase' }}>{team.player1} &amp; {team.player2}</p>
                                     <p style={{ margin: 0, color: '#6b7280', fontSize: '0.7rem' }}>{team.played} played · {team.wins}W</p>
                                 </div>
-                                <span style={{ fontSize: '3rem', fontWeight: 900, flexShrink: 0, color: goalCol }}>{team.goals}</span>
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
+                                    <span style={{ fontSize: '3rem', fontWeight: 900, lineHeight: 1, color: goalCol }}>{team.wins}</span>
+                                    <span style={{ fontSize: '0.65rem', fontWeight: 700, color: goalCol, textTransform: 'uppercase', letterSpacing: '0.1em' }}>wins</span>
+                                </div>
                             </div>
                         );
                     })}
