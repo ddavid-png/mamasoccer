@@ -97,23 +97,23 @@ export const WinnerView = () => {
 
             {/* Title */}
             <div className="slide-in-2" style={{
-                fontSize: '1rem', fontWeight: 900,
-                textTransform: 'uppercase', letterSpacing: '0.25em',
-                color: '#6b7280', marginBottom: 12,
+                fontSize: '1.75rem', fontWeight: 900,
+                textTransform: 'uppercase', letterSpacing: '0.2em',
+                color: '#6b7280', marginBottom: 20,
             }}>
                 Mama Lisboa · <span style={{ color: '#FFFF00' }}>Foosball</span> Tournament
             </div>
 
             {/* Trophy */}
-            <div className="slide-in-3" style={{ fontSize: '5rem', lineHeight: 1, marginBottom: 16 }}>
+            <div className="slide-in-3" style={{ fontSize: '8rem', lineHeight: 1, marginBottom: 20 }}>
                 <span className="trophy-anim">🏆</span>
             </div>
 
             {/* WINNERS label */}
             <div className="slide-in-3" style={{
-                fontSize: '1.1rem', fontWeight: 900,
-                textTransform: 'uppercase', letterSpacing: '0.4em',
-                color: '#ffffff99', marginBottom: 20,
+                fontSize: '2rem', fontWeight: 900,
+                textTransform: 'uppercase', letterSpacing: '0.35em',
+                color: '#ffffff99', marginBottom: 28,
             }}>
                 Tournament Winners
             </div>
