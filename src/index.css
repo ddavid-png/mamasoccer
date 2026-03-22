@@ -48,3 +48,26 @@
   background-color: var(--color-mama-pink);
   transform: rotate(1deg);
 }
+
+/* TV display animations — no framer-motion, pure CSS for TV browser compat */
+@keyframes tv-border-danger {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@keyframes tv-border-warning {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+@keyframes tv-timer-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+.tv-border-danger {
+  animation: tv-border-danger 0.5s infinite;
+}
+.tv-border-warning {
+  animation: tv-border-warning 1s infinite;
+}
+.tv-timer-pulse {
+  animation: tv-timer-pulse 0.5s infinite;
+}
