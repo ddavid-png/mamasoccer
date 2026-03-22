@@ -127,8 +127,18 @@ export const TvDisplay = () => {
                         Mama Lisboa <span style={{ background: '#FFFF00', color: 'black', padding: '0 8px' }}>Foosball</span> Tournament
                     </h1>
                 </div>
-                <div className={isDanger ? 'tv-timer-pulse' : ''} style={{ fontWeight: 900, textTransform: 'uppercase', padding: '4px 24px', border: '4px solid ' + timerColor, color: timerColor, background: timerColor + '20' }}>
-                    <span style={{ fontSize: '6rem', lineHeight: 1 }}>{formatTime(timeRemaining)}</span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 8 }}>
+                    <div className={isDanger ? 'tv-timer-pulse' : ''} style={{ fontWeight: 900, textTransform: 'uppercase', padding: '4px 24px', border: '4px solid ' + timerColor, color: timerColor, background: timerColor + '20', textAlign: 'center' }}>
+                        <span style={{ fontSize: '6rem', lineHeight: 1 }}>{formatTime(timeRemaining)}</span>
+                    </div>
+                    <a href="/winner" style={{
+                        display: 'block', textAlign: 'center',
+                        padding: '10px 0', background: '#FFFF00', color: 'black',
+                        fontWeight: 900, fontSize: '0.9rem', textTransform: 'uppercase',
+                        letterSpacing: '0.15em', textDecoration: 'none',
+                    }}>
+                        🏆 Winner
+                    </a>
                 </div>
             </div>
 

@@ -5,6 +5,7 @@ import { TvDisplay } from './views/TvDisplay';
 import { PublicTeamsView } from './views/PublicTeamsView';
 import { TreeEditor } from './views/TreeEditor';
 import { HistoryView } from './views/HistoryView';
+import { WinnerView } from './views/WinnerView';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/tv" element={<TvDisplay />} />
         <Route path="/teams" element={<PublicTeamsView />} />
         <Route path="/history" element={<HistoryView />} />
+        <Route path="/winner" element={<WinnerView />} />
       </Routes>
     </BrowserRouter>
   );
