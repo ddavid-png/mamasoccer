@@ -55,6 +55,7 @@ export const AdminDashboard = () => {
         let counter = maxNum + 1;
         const baseTime = Date.now();
 
+        const newTeam = allTeams.find(t => t.id === newTeamId);
         for (const team of otherTeams) {
             const exists = allMatches.some(m =>
                 (m.team1_id === newTeamId && m.team2_id === team.id) ||
@@ -67,6 +68,10 @@ export const AdminDashboard = () => {
                     table_number: 1,
                     team1_id: newTeamId,
                     team2_id: team.id,
+                    team1_name: newTeam?.name || '',
+                    team2_name: team.name || '',
+                    team1_players: [newTeam?.player1, newTeam?.player2].filter(Boolean).join(' & '),
+                    team2_players: [team.player1, team.player2].filter(Boolean).join(' & '),
                     team1_score: 0,
                     team2_score: 0,
                     status: 'pending',
@@ -134,6 +139,10 @@ export const AdminDashboard = () => {
             table_number: 1,
             team1_id: t1.id,
             team2_id: t2.id,
+            team1_name: t1.name || '',
+            team2_name: t2.name || '',
+            team1_players: [t1.player1, t1.player2].filter(Boolean).join(' & '),
+            team2_players: [t2.player1, t2.player2].filter(Boolean).join(' & '),
             team1_score: 0,
             team2_score: 0,
             status: 'pending',

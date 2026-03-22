@@ -54,6 +54,13 @@ export const HistoryView = () => {
                         const t1Win = m.team1_score > m.team2_score;
                         const t2Win = m.team2_score > m.team1_score;
                         const draw = m.team1_score === m.team2_score;
+                        // Use live FK join first, fall back to snapshot columns if team was deleted
+                        const t1Name = m.team1?.name || m.team1_name || '—';
+                        const t2Name = m.team2?.name || m.team2_name || '—';
+                        const t1Players = m.team1 ? `${m.team1.player1 || ''} & ${m.team1.player2 || ''}` : m.team1_players || '';
+                        const t2Players = m.team2 ? `${m.team2.player1 || ''} & ${m.team2.player2 || ''}` : m.team2_players || '';
+                        const t1Deleted = !m.team1 && m.team1_name;
+                        const t2Deleted = !m.team2 && m.team2_name;
                         return (
                             <div key={m.id} style={{
                                 background: '#1a1a1a',
@@ -75,11 +82,10 @@ export const HistoryView = () => {
                                         color: t1Win ? '#FFFF00' : draw ? 'white' : '#6b7280',
                                         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
                                     }}>
-                                        {m.team1?.name || '—'}
+                                        {t1Name}
+                                        {t1Deleted && <span style={{ fontSize: '0.55rem', color: '#6b7280', marginLeft: 6, fontWeight: 700 }}>(removed)</span>}
                                     </p>
-                                    <p style={{ margin: 0, color: '#4b5563', fontSize: '0.65rem', fontWeight: 600 }}>
-                                        {m.team1?.player1} &amp; {m.team1?.player2}
-                                    </p>
+                                    <p style={{ margin: 0, color: '#4b5563', fontSize: '0.65rem', fontWeight: 600 }}>{t1Players}</p>
                                 </div>
 
                                 {/* Score */}
@@ -103,11 +109,10 @@ export const HistoryView = () => {
                                         color: t2Win ? '#FF0066' : draw ? 'white' : '#6b7280',
                                         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
                                     }}>
-                                        {m.team2?.name || '—'}
+                                        {t2Name}
+                                        {t2Deleted && <span style={{ fontSize: '0.55rem', color: '#6b7280', marginLeft: 6, fontWeight: 700 }}>(removed)</span>}
                                     </p>
-                                    <p style={{ margin: 0, color: '#4b5563', fontSize: '0.65rem', fontWeight: 600 }}>
-                                        {m.team2?.player1} &amp; {m.team2?.player2}
-                                    </p>
+                                    <p style={{ margin: 0, color: '#4b5563', fontSize: '0.65rem', fontWeight: 600 }}>{t2Players}</p>
                                 </div>
 
                                 {/* Result badge */}
