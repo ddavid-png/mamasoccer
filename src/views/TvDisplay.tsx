@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../supabaseClient';
 
 export const TvDisplay = () => {
@@ -12,7 +12,7 @@ export const TvDisplay = () => {
     const [timeRemaining, setTimeRemaining] = useState<number>(0);
     const [loading, setLoading] = useState(true);
 
-    const serviceIdRef = { current: serviceId };
+    const serviceIdRef = useRef(serviceId);
 
     useEffect(() => {
         serviceIdRef.current = serviceId;
