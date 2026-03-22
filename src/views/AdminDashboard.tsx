@@ -55,7 +55,6 @@ export const AdminDashboard = () => {
         const shuffled = [...teams].sort(() => 0.5 - Math.random());
         const newMatches: any[] = [];
         let matchNumber = 1;
-        let tableCounter: 1 | 2 = 1;
         const baseTime = Date.now();
 
         for (let i = 0; i < shuffled.length; i++) {
@@ -63,7 +62,7 @@ export const AdminDashboard = () => {
                 newMatches.push({
                     service_id: serviceId,
                     match_number: matchNumber,
-                    table_number: tableCounter,
+                    table_number: 1,
                     team1_id: shuffled[i].id,
                     team2_id: shuffled[j].id,
                     team1_score: 0,
@@ -71,7 +70,6 @@ export const AdminDashboard = () => {
                     status: 'pending',
                     created_at: new Date(baseTime + matchNumber * 1000).toISOString(),
                 });
-                tableCounter = tableCounter === 1 ? 2 : 1;
                 matchNumber++;
             }
         }
@@ -219,57 +217,56 @@ export const AdminDashboard = () => {
                     </div>
                 </div>
 
-                {/* RIGHT COLUMN: Active Matches */}
+                {/* RIGHT COLUMN: Active Match */}
                 <div className="lg:col-span-2 space-y-6">
                     <h2 className="text-2xl font-black uppercase tracking-widest"><span className="mama-highlight-pink text-black px-2">Now Playing</span></h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {[1, 2].map(tableNum => {
-                            const activeMatch = matches.find(m => m.table_number === tableNum && m.status === 'active');
-                            return (
-                                <div key={tableNum} className="bg-black/40 border-2 border-gray-700 p-6 flex flex-col">
-                                    <h3 className="text-2xl font-black text-center text-gray-500 mb-6 uppercase tracking-widest">Mesa {tableNum}</h3>
-                                    {activeMatch ? (
-                                        <div className="flex-1 flex flex-col justify-between">
-                                            <div className="flex items-center justify-between mb-4 bg-gray-900 p-4">
-                                                <span className="font-bold text-center flex-1">{activeMatch.team1?.name || 'TBA'}</span>
-                                                <div className="flex items-center gap-3">
-                                                    <button onClick={() => updateScore(activeMatch.id, 1, activeMatch.team1_score, -1)} className="p-2 bg-gray-800 hover:bg-gray-700 text-white"><Minus size={16} /></button>
-                                                    <span className="text-3xl font-black text-mama-pink w-12 text-center">{activeMatch.team1_score}</span>
-                                                    <button onClick={() => updateScore(activeMatch.id, 1, activeMatch.team1_score, 1)} className="p-2 bg-gray-800 hover:bg-gray-700 text-white"><Plus size={16} /></button>
-                                                </div>
+
+                    {(() => {
+                        const activeMatch = matches.find(m => m.status === 'active');
+                        return (
+                            <div className="bg-black/40 border-2 border-gray-700 p-6 flex flex-col">
+                                <h3 className="text-2xl font-black text-center text-gray-500 mb-6 uppercase tracking-widest">Mesa</h3>
+                                {activeMatch ? (
+                                    <div className="flex flex-col gap-4">
+                                        <div className="flex items-center justify-between bg-gray-900 p-4">
+                                            <span className="font-bold text-center flex-1 text-lg">{activeMatch.team1?.name || 'TBA'}</span>
+                                            <div className="flex items-center gap-3">
+                                                <button onClick={() => updateScore(activeMatch.id, 1, activeMatch.team1_score, -1)} className="p-2 bg-gray-800 hover:bg-gray-700 text-white"><Minus size={16} /></button>
+                                                <span className="text-3xl font-black text-mama-pink w-12 text-center">{activeMatch.team1_score}</span>
+                                                <button onClick={() => updateScore(activeMatch.id, 1, activeMatch.team1_score, 1)} className="p-2 bg-gray-800 hover:bg-gray-700 text-white"><Plus size={16} /></button>
                                             </div>
-                                            <div className="flex items-center justify-between bg-gray-900 p-4">
-                                                <span className="font-bold text-center flex-1">{activeMatch.team2?.name || 'TBA'}</span>
-                                                <div className="flex items-center gap-3">
-                                                    <button onClick={() => updateScore(activeMatch.id, 2, activeMatch.team2_score, -1)} className="p-2 bg-gray-800 hover:bg-gray-700 text-white"><Minus size={16} /></button>
-                                                    <span className="text-3xl font-black text-mama-blue w-12 text-center">{activeMatch.team2_score}</span>
-                                                    <button onClick={() => updateScore(activeMatch.id, 2, activeMatch.team2_score, 1)} className="p-2 bg-gray-800 hover:bg-gray-700 text-white"><Plus size={16} /></button>
-                                                </div>
+                                        </div>
+                                        <div className="flex items-center justify-between bg-gray-900 p-4">
+                                            <span className="font-bold text-center flex-1 text-lg">{activeMatch.team2?.name || 'TBA'}</span>
+                                            <div className="flex items-center gap-3">
+                                                <button onClick={() => updateScore(activeMatch.id, 2, activeMatch.team2_score, -1)} className="p-2 bg-gray-800 hover:bg-gray-700 text-white"><Minus size={16} /></button>
+                                                <span className="text-3xl font-black text-mama-blue w-12 text-center">{activeMatch.team2_score}</span>
+                                                <button onClick={() => updateScore(activeMatch.id, 2, activeMatch.team2_score, 1)} className="p-2 bg-gray-800 hover:bg-gray-700 text-white"><Plus size={16} /></button>
                                             </div>
-                                            <button onClick={() => completeMatch(activeMatch.id)} className="mt-6 py-3 bg-mama-green text-black font-black uppercase tracking-wider hover:bg-white transition-colors">
-                                                End Match
-                                            </button>
                                         </div>
-                                    ) : (
-                                        <div className="flex-1 flex flex-col items-center justify-center text-center opacity-60">
-                                            <p className="mb-4 text-sm">No active match.</p>
-                                            {pendingMatches.length > 0 && (
-                                                <div className="w-full">
-                                                    <p className="text-xs uppercase text-gray-500 font-bold mb-2">Queue Next:</p>
-                                                    {pendingMatches.slice(0, 4).map(m => (
-                                                        <button key={m.id} onClick={() => setMatchActive(m.id, tableNum)} className="w-full text-left bg-gray-900 p-3 text-sm flex justify-between items-center mb-2 hover:bg-gray-800">
-                                                            <span className="truncate pr-2">#{m.match_number} · {m.team1?.name} vs {m.team2?.name}</span>
-                                                            <Play size={14} className="text-mama-green flex-shrink-0" />
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
+                                        <button onClick={() => completeMatch(activeMatch.id)} className="py-3 bg-mama-green text-black font-black uppercase tracking-wider hover:bg-white transition-colors">
+                                            End Match
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center text-center opacity-60 py-6">
+                                        <p className="mb-4 text-sm">No active match.</p>
+                                        {pendingMatches.length > 0 && (
+                                            <div className="w-full">
+                                                <p className="text-xs uppercase text-gray-500 font-bold mb-2">Queue Next:</p>
+                                                {pendingMatches.slice(0, 5).map(m => (
+                                                    <button key={m.id} onClick={() => setMatchActive(m.id, 1)} className="w-full text-left bg-gray-900 p-3 text-sm flex justify-between items-center mb-2 hover:bg-gray-800 opacity-100">
+                                                        <span className="truncate pr-2">#{m.match_number} · {m.team1?.name} vs {m.team2?.name}</span>
+                                                        <Play size={14} className="text-mama-green flex-shrink-0" />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })()}
 
                     {/* Pending Matches Queue */}
                     {pendingMatches.length > 0 && (
@@ -280,10 +277,9 @@ export const AdminDashboard = () => {
                                     <div key={m.id} className="bg-gray-900 px-3 py-2 text-sm flex items-center justify-between">
                                         <span className="text-gray-400 font-bold mr-2">#{m.match_number}</span>
                                         <span className="flex-1 truncate">{m.team1?.name} <span className="text-gray-600">vs</span> {m.team2?.name}</span>
-                                        <div className="flex gap-1 ml-2">
-                                            <button onClick={() => setMatchActive(m.id, 1)} className="px-2 py-1 bg-mama-pink/20 text-mama-pink text-xs font-bold hover:bg-mama-pink hover:text-black transition-colors">T1</button>
-                                            <button onClick={() => setMatchActive(m.id, 2)} className="px-2 py-1 bg-mama-blue/20 text-mama-blue text-xs font-bold hover:bg-mama-blue hover:text-black transition-colors">T2</button>
-                                        </div>
+                                        <button onClick={() => setMatchActive(m.id, 1)} className="ml-2 px-3 py-1 bg-mama-pink/20 text-mama-pink text-xs font-bold hover:bg-mama-pink hover:text-black transition-colors">
+                                            <Play size={12} className="inline mr-1" />Play
+                                        </button>
                                     </div>
                                 ))}
                             </div>

@@ -90,6 +90,11 @@ export const RegistrationView = () => {
     return (
         <div className="min-h-screen flex flex-col items-center p-6 bg-mama-dark text-white">
             <div className="w-full max-w-md mt-12 mb-8 text-center">
+                <img
+                    src="/logo.png"
+                    alt="Mama Lisboa"
+                    className="w-40 h-40 mx-auto mb-6 rounded-full object-cover"
+                />
                 <h1 className="text-5xl font-black mb-2 uppercase leading-none tracking-tight">
                     <span className="mama-highlight font-black text-black px-2">Foosball</span><br />
                     Tournament

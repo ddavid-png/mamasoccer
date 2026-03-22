@@ -86,8 +86,7 @@ export const TvDisplay = () => {
         return { ...team, goals, wins, played };
     }).sort((a, b) => b.goals - a.goals || b.wins - a.wins);
 
-    const table1Match = matches.find(m => m.table_number === 1 && m.status === 'active');
-    const table2Match = matches.find(m => m.table_number === 2 && m.status === 'active');
+    const table1Match = matches.find(m => m.status === 'active');
     const completedCount = matches.filter(m => m.status === 'completed').length;
 
     const isRunning = timerState?.timer_status === 'running' && timeRemaining > 0;
@@ -96,7 +95,8 @@ export const TvDisplay = () => {
 
     if (loading) return <div className="h-screen bg-mama-dark" />;
 
-    if (matches.length === 0) {
+    // Only show registration screen when no teams at all
+    if (teams.length === 0) {
         return (
             <div className="h-screen p-12 bg-mama-dark flex flex-col items-center justify-center relative overflow-hidden">
                 <motion.div
@@ -104,15 +104,15 @@ export const TvDisplay = () => {
                     transition={{ repeat: Infinity, duration: 60, ease: 'linear' }}
                     className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"
                 />
-                <h1 className="text-[8rem] font-black uppercase text-white tracking-widest text-center leading-[0.85] z-10">
+                <img src="/logo.png" alt="Mama Lisboa" className="w-48 h-48 rounded-full object-cover mb-8 z-10" />
+                <h1 className="text-[6rem] font-black uppercase text-white tracking-widest text-center leading-[0.85] z-10">
                     <span className="mama-highlight font-black text-black px-8">Foosball</span><br />
                     Tournament
                 </h1>
-                <div className="mt-16 bg-white p-4 z-10">
+                <div className="mt-12 bg-white p-4 z-10">
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://mamasoccer.vercel.app" alt="QR Code" />
                 </div>
                 <p className="mt-6 text-3xl text-mama-pink font-black uppercase tracking-wider z-10">Scan to Register Your Team</p>
-                <p className="mt-4 text-2xl text-gray-500 font-bold uppercase z-10">Service {serviceId}</p>
             </div>
         );
     }
@@ -167,9 +167,12 @@ export const TvDisplay = () => {
 
             {/* HEADER */}
             <header className="flex justify-between items-center z-10 shrink-0 mb-2">
-                <h1 className="text-2xl 2xl:text-4xl font-black uppercase leading-none tracking-tight">
-                    <span className="mama-highlight font-black text-black px-2">Mama</span> Shelter Foosball
-                </h1>
+                <div className="flex items-center gap-3">
+                    <img src="/logo.png" alt="Mama Lisboa" className="w-12 h-12 rounded-full object-cover shrink-0" />
+                    <h1 className="text-2xl 2xl:text-4xl font-black uppercase leading-none tracking-tight">
+                        <span className="mama-highlight font-black text-black px-2">Mama</span> Shelter Foosball
+                    </h1>
+                </div>
                 <motion.div
                     className={`font-black uppercase tracking-tighter px-4 py-1 border-4 ${isDanger ? 'text-red-500 border-red-500 bg-red-500/20' : isWarning ? 'text-mama-yellow border-mama-yellow bg-mama-yellow/20' : 'text-mama-green border-mama-green bg-mama-green/20'}`}
                     animate={isDanger ? { scale: [1, 1.1, 1], opacity: [1, 0.8, 1] } : {}}
@@ -179,10 +182,9 @@ export const TvDisplay = () => {
                 </motion.div>
             </header>
 
-            {/* ACTIVE MATCHES */}
-            <div className="z-10 shrink-0 flex flex-col gap-2 mb-3">
+            {/* ACTIVE MATCH */}
+            <div className="z-10 shrink-0 mb-3">
                 <TableMatchCard match={table1Match} tableNum={1} color="pink" />
-                <TableMatchCard match={table2Match} tableNum={2} color="blue" />
             </div>
 
             {/* LEADERBOARD */}
