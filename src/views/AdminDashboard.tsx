@@ -27,11 +27,54 @@ export const AdminDashboard = () => {
             .channel('admin-channel')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'matches' }, fetchData)
             .on('postgres_changes', { event: '*', schema: 'public', table: 'tournament_state' }, fetchData)
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'teams' }, fetchData)
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'teams' }, (payload) => {
+                // When a new team is added (from any source), add their matches if schedule exists
+                addMatchesForNewTeam(payload.new.id).then(fetchData);
+            })
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'teams' }, fetchData)
+            .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'teams' }, fetchData)
             .subscribe();
 
         return () => { supabase.removeChannel(sub); };
     }, [serviceId]);
+
+    // When a new team joins, add their pending matches vs all existing teams (if schedule exists)
+    const addMatchesForNewTeam = async (newTeamId: string) => {
+        const { data: allTeams } = await supabase.from('teams').select('*').eq('service_id', serviceId);
+        const { data: allMatches } = await supabase.from('matches').select('*').eq('service_id', serviceId);
+
+        if (!allTeams || !allMatches || allMatches.length === 0) return; // No schedule yet
+
+        const otherTeams = allTeams.filter(t => t.id !== newTeamId);
+        const maxNum = allMatches.reduce((max, m) => Math.max(max, m.match_number), 0);
+        const newMatches: any[] = [];
+        let counter = maxNum + 1;
+        const baseTime = Date.now();
+
+        for (const team of otherTeams) {
+            const exists = allMatches.some(m =>
+                (m.team1_id === newTeamId && m.team2_id === team.id) ||
+                (m.team1_id === team.id && m.team2_id === newTeamId)
+            );
+            if (!exists) {
+                newMatches.push({
+                    service_id: serviceId,
+                    match_number: counter++,
+                    table_number: 1,
+                    team1_id: newTeamId,
+                    team2_id: team.id,
+                    team1_score: 0,
+                    team2_score: 0,
+                    status: 'pending',
+                    created_at: new Date(baseTime + counter * 1000).toISOString(),
+                });
+            }
+        }
+
+        if (newMatches.length > 0) {
+            await supabase.from('matches').insert(newMatches);
+        }
+    };
 
     const fetchData = async () => {
         const { data: teamsData } = await supabase.from('teams').select('*').eq('service_id', serviceId).order('created_at');
