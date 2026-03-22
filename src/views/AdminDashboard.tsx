@@ -93,48 +93,55 @@ export const AdminDashboard = () => {
     // --- Round-Robin Schedule Generation ---
     const generateSchedule = async () => {
         if (teams.length < 2) return alert('Need at least 2 teams!');
-        const totalExpected = (teams.length * (teams.length - 1)) / 2;
-        if (matches.length > 0) {
-            if (!confirm(`Clear all ${matches.length} existing matches and regenerate ${totalExpected} matches for ${teams.length} teams?`)) return;
-        }
 
-        // Delete ALL existing matches for this service
-        const { error: delErr } = await supabase.from('matches').delete().eq('service_id', serviceId);
-        if (delErr) {
-            console.error('Delete error:', delErr);
-            return alert('Failed to clear old schedule: ' + delErr.message);
-        }
+        // Find all pairs that have already been played (completed or active) — preserve these
+        const { data: doneMathces } = await supabase
+            .from('matches').select('team1_id, team2_id').eq('service_id', serviceId).neq('status', 'pending');
+        const donePairs = new Set((doneMathces || []).map((m: any) => [m.team1_id, m.team2_id].sort().join('-')));
 
-        // Small pause to let delete commit before inserting
-        await new Promise(r => setTimeout(r, 200));
-
+        // Build only the missing pairs
         const shuffled = [...teams].sort(() => 0.5 - Math.random());
-        const newMatches: any[] = [];
-        let matchNumber = 1;
-        const baseTime = Date.now();
-
+        const newPairs: [any, any][] = [];
         for (let i = 0; i < shuffled.length; i++) {
             for (let j = i + 1; j < shuffled.length; j++) {
-                newMatches.push({
-                    service_id: serviceId,
-                    match_number: matchNumber,
-                    table_number: 1,
-                    team1_id: shuffled[i].id,
-                    team2_id: shuffled[j].id,
-                    team1_score: 0,
-                    team2_score: 0,
-                    status: 'pending',
-                    created_at: new Date(baseTime + matchNumber * 1000).toISOString(),
-                });
-                matchNumber++;
+                const key = [shuffled[i].id, shuffled[j].id].sort().join('-');
+                if (!donePairs.has(key)) newPairs.push([shuffled[i], shuffled[j]]);
             }
         }
 
+        const playedCount = doneMathces?.length || 0;
+        const msg = playedCount > 0
+            ? `${playedCount} completed match(es) will be preserved.\n${newPairs.length} new pending matches will be created for remaining pairs.\nContinue?`
+            : `Generate ${newPairs.length} matches for ${teams.length} teams?`;
+        if (!confirm(msg)) return;
+
+        // Only wipe pending matches, keep completed/active history
+        const { error: delErr } = await supabase.from('matches').delete().eq('service_id', serviceId).eq('status', 'pending');
+        if (delErr) return alert('Failed to clear pending matches: ' + delErr.message);
+
+        if (newPairs.length === 0) { await fetchData(); return; }
+
+        await new Promise(r => setTimeout(r, 200));
+
+        // Start match_number after the highest existing one
+        const { data: lastMatch } = await supabase.from('matches').select('match_number').eq('service_id', serviceId).order('match_number', { ascending: false }).limit(1);
+        let matchNumber = (lastMatch?.[0]?.match_number || 0) + 1;
+        const baseTime = Date.now();
+
+        const newMatches: any[] = newPairs.map(([t1, t2], idx) => ({
+            service_id: serviceId,
+            match_number: matchNumber + idx,
+            table_number: 1,
+            team1_id: t1.id,
+            team2_id: t2.id,
+            team1_score: 0,
+            team2_score: 0,
+            status: 'pending',
+            created_at: new Date(baseTime + idx * 1000).toISOString(),
+        }));
+
         const { error: insertErr } = await supabase.from('matches').insert(newMatches);
-        if (insertErr) {
-            console.error('Insert error:', insertErr);
-            alert('Error generating schedule: ' + insertErr.message);
-        }
+        if (insertErr) return alert('Error generating schedule: ' + insertErr.message);
         await fetchData();
     };
 
@@ -237,6 +244,11 @@ export const AdminDashboard = () => {
                         {matches.length > 0 && (
                             <div className="mb-4 text-center text-sm font-bold text-gray-400">
                                 <span className="text-mama-green">{completedCount}</span> / {matches.length} matches played
+                                {completedCount > 0 && (
+                                    <a href="/history" className="ml-4 text-xs text-mama-blue hover:text-white uppercase tracking-wider">
+                                        View History →
+                                    </a>
+                                )}
                             </div>
                         )}
                         <button onClick={generateSchedule} className="w-full py-4 bg-mama-blue text-black font-black uppercase tracking-wider hover:bg-white transition-colors flex items-center justify-center gap-2">

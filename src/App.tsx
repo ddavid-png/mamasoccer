@@ -4,6 +4,7 @@ import { AdminDashboard } from './views/AdminDashboard';
 import { TvDisplay } from './views/TvDisplay';
 import { PublicTeamsView } from './views/PublicTeamsView';
 import { TreeEditor } from './views/TreeEditor';
+import { HistoryView } from './views/HistoryView';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/tree" element={<TreeEditor />} />
         <Route path="/tv" element={<TvDisplay />} />
         <Route path="/teams" element={<PublicTeamsView />} />
+        <Route path="/history" element={<HistoryView />} />
       </Routes>
     </BrowserRouter>
   );
