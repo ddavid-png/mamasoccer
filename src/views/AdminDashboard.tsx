@@ -138,7 +138,7 @@ export const AdminDashboard = () => {
 
     // --- Timer ---
     const startTimer = async () => {
-        const endsAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+        const endsAt = new Date(Date.now() + 4 * 60 * 1000).toISOString();
         await supabase.from('tournament_state').update({ timer_status: 'running', timer_ends_at: endsAt }).eq('service_id', serviceId);
     };
 
