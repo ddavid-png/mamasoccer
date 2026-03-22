@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
-import { motion } from 'framer-motion';
 
 export const PublicTeamsView = () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -51,11 +50,8 @@ export const PublicTeamsView = () => {
                             <p className="text-2xl font-bold uppercase text-gray-500 tracking-widest">No teams registered yet.</p>
                         </div>
                     ) : (
-                        teams.map((team, index) => (
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.05 }}
+                        teams.map((team) => (
+                            <div
                                 key={team.id}
                                 className={`p-6 border-l-8 bg-black/60 flex flex-col justify-center shadow-lg ${serviceId === 1 ? 'border-mama-yellow' : 'border-mama-pink'}`}
                             >
@@ -65,7 +61,7 @@ export const PublicTeamsView = () => {
                                     <span className="text-mama-blue">&amp;</span>
                                     <span>{team.player2}</span>
                                 </div>
-                            </motion.div>
+                            </div>
                         ))
                     )}
                 </div>

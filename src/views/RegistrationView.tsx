@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
-import { motion } from 'framer-motion';
 
 export const RegistrationView = () => {
     const [teamName, setTeamName] = useState('');
@@ -61,11 +60,7 @@ export const RegistrationView = () => {
     if (success) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-mama-dark text-white">
-                <motion.div
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="max-w-md w-full p-8 border-4 border-mama-blue bg-black/50 backdrop-blur"
-                >
+                <div className="max-w-md w-full p-8 border-4 border-mama-blue bg-black/50 backdrop-blur animate-fade-in">
                     <h1 className="text-4xl font-black mb-6 uppercase text-mama-yellow">You're in!</h1>
                     <p className="text-xl mb-4 font-bold">Keep an eye on the TV screens for your match.</p>
                     <p className="text-gray-400">Team: <span className="text-white">{teamName}</span></p>
@@ -80,7 +75,7 @@ export const RegistrationView = () => {
                     >
                         Register another team
                     </button>
-                </motion.div>
+                </div>
             </div>
         );
     }
