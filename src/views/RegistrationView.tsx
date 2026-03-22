@@ -91,7 +91,7 @@ export const RegistrationView = () => {
         <div className="min-h-screen flex flex-col items-center p-6 bg-mama-dark text-white">
             <div className="w-full max-w-md mt-12 mb-8 text-center">
                 <img
-                    src="/logo.png"
+                    src="/LISBOA CMYK.png"
                     alt="Mama Lisboa"
                     className="w-40 h-40 mx-auto mb-6 rounded-full object-cover"
                 />

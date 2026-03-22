@@ -104,7 +104,7 @@ export const TvDisplay = () => {
                     transition={{ repeat: Infinity, duration: 60, ease: 'linear' }}
                     className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"
                 />
-                <img src="/logo.png" alt="Mama Lisboa" className="w-48 h-48 rounded-full object-cover mb-8 z-10" />
+                <img src="/LISBOA CMYK.png" alt="Mama Lisboa" className="w-48 h-48 rounded-full object-cover mb-8 z-10" />
                 <h1 className="text-[6rem] font-black uppercase text-white tracking-widest text-center leading-[0.85] z-10">
                     <span className="mama-highlight font-black text-black px-8">Foosball</span><br />
                     Tournament
@@ -168,7 +168,7 @@ export const TvDisplay = () => {
             {/* HEADER */}
             <header className="flex justify-between items-center z-10 shrink-0 mb-2">
                 <div className="flex items-center gap-3">
-                    <img src="/logo.png" alt="Mama Lisboa" className="w-12 h-12 rounded-full object-cover shrink-0" />
+                    <img src="/LISBOA CMYK.png" alt="Mama Lisboa" className="w-12 h-12 rounded-full object-cover shrink-0" />
                     <h1 className="text-2xl 2xl:text-4xl font-black uppercase leading-none tracking-tight">
                         <span className="mama-highlight font-black text-black px-2">Mama</span> Shelter Foosball
                     </h1>
