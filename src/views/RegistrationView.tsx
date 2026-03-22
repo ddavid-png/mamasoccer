@@ -36,7 +36,7 @@ export const RegistrationView = () => {
         setLoading(true);
         setErrorMsg('');
 
-        if (counts[serviceId] >= 16) {
+        if (counts[serviceId] >= 20) {
             setErrorMsg('This service is currently full!');
             setLoading(false);
             return;
@@ -85,7 +85,7 @@ export const RegistrationView = () => {
         );
     }
 
-    const isFull = counts[serviceId] >= 16;
+    const isFull = counts[serviceId] >= 20;
 
     return (
         <div className="min-h-screen flex flex-col items-center p-6 bg-mama-dark text-white">
@@ -111,7 +111,7 @@ export const RegistrationView = () => {
                             <span className={`font-black uppercase ${serviceId === 1 ? 'text-mama-yellow' : 'text-gray-300'}`}>Service 1</span>
                             <span className="text-xs text-gray-400 mt-1">12h - 14h</span>
                             <span className={`text-xs mt-2 font-bold px-2 py-1 ${counts[1] >= 16 ? 'bg-red-500/20 text-red-500' : 'bg-mama-green/20 text-mama-green'}`}>
-                                {counts[1]}/16 Teams
+                                {counts[1]} Teams
                             </span>
                         </button>
                         <button
@@ -122,7 +122,7 @@ export const RegistrationView = () => {
                             <span className={`font-black uppercase ${serviceId === 2 ? 'text-mama-pink' : 'text-gray-300'}`}>Service 2</span>
                             <span className="text-xs text-gray-400 mt-1">14h - 16h</span>
                             <span className={`text-xs mt-2 font-bold px-2 py-1 ${counts[2] >= 16 ? 'bg-red-500/20 text-red-500' : 'bg-mama-green/20 text-mama-green'}`}>
-                                {counts[2]}/16 Teams
+                                {counts[2]} Teams
                             </span>
                         </button>
                     </div>

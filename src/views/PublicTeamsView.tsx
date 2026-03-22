@@ -42,7 +42,7 @@ export const PublicTeamsView = () => {
                         Teams
                     </h1>
                     <p className="text-2xl text-mama-pink font-bold tracking-widest uppercase">Service {serviceId}</p>
-                    <p className="text-gray-400 font-bold uppercase mt-2">{teams.length} / 16 Spots Filled</p>
+                    <p className="text-gray-400 font-bold uppercase mt-2">{teams.length} Teams Registered</p>
                 </header>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -70,13 +70,11 @@ export const PublicTeamsView = () => {
                     )}
                 </div>
 
-                {teams.length < 16 && (
-                    <div className="mt-12 text-center">
-                        <a href="/" className="inline-block px-8 py-4 bg-mama-blue text-black font-black uppercase tracking-wider hover:bg-white hover:-translate-y-1 transition-all shadow-[0_4px_0_var(--color-mama-pink)]">
-                            Register Now
-                        </a>
-                    </div>
-                )}
+                <div className="mt-12 text-center">
+                    <a href="/" className="inline-block px-8 py-4 bg-mama-blue text-black font-black uppercase tracking-wider hover:bg-white hover:-translate-y-1 transition-all shadow-[0_4px_0_var(--color-mama-pink)]">
+                        Register Now
+                    </a>
+                </div>
             </div>
         </div>
     );

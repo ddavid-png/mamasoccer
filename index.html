@@ -2,12 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <title>MamaSoccer</title>
+    <!-- TV browser baseline: disable tap delay, ensure black background -->
+    <style>
+      * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+      html, body { height: 100%; width: 100%; margin: 0; padding: 0; background: #1A1A1A; overflow-x: hidden; }
+      #root { height: 100%; }
+    </style>
+    <!-- Error overlay for TV debugging -->
+    <script>
+      window.onerror = function(msg, url, line, col) {
+        var d = document.getElementById('_err');
+        if (!d) {
+          d = document.createElement('div');
+          d.id = '_err';
+          d.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:rgba(200,0,0,0.9);color:#fff;z-index:99999;font-size:18px;padding:16px;font-family:monospace;word-break:break-all;';
+          document.body.appendChild(d);
+        }
+        d.innerHTML += '<div>' + msg + ' @ ' + line + ':' + col + '</div>';
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>
