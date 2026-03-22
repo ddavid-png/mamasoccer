@@ -79,7 +79,7 @@ export const TvDisplay = () => {
             else if (m.team2 && m.team2.id === team.id) { goals += m.team2_score; played++; if (m.team2_score > m.team1_score) wins++; }
         });
         return { id: team.id, name: team.name, player1: team.player1, player2: team.player2, goals, wins, played };
-    }).sort((a, b) => b.goals - a.goals || b.wins - a.wins);
+    }).sort((a, b) => b.wins - a.wins || b.goals - a.goals);
 
     const activeMatch = matches.find(m => m.status === 'active');
     const completedCount = matches.filter(m => m.status === 'completed').length;
@@ -172,7 +172,7 @@ export const TvDisplay = () => {
             <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', zIndex: 10 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, flexShrink: 0 }}>
                     <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#FFFF00' }}>
-                        Leaderboard — Most Goals Wins
+                        Leaderboard — Most Wins
                     </h2>
                     <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#666', textTransform: 'uppercase' }}>{completedCount}/{matches.length} matches played</span>
                 </div>
