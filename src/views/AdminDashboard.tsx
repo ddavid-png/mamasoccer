@@ -24,15 +24,15 @@ export const AdminDashboard = () => {
         fetchData();
 
         const sub = supabase
-            .channel('admin-channel')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'matches' }, fetchData)
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'tournament_state' }, fetchData)
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'teams' }, (payload) => {
+            .channel(`admin-channel-${serviceId}`)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'matches', filter: `service_id=eq.${serviceId}` }, fetchData)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'tournament_state', filter: `service_id=eq.${serviceId}` }, fetchData)
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'teams', filter: `service_id=eq.${serviceId}` }, (payload) => {
                 // When a new team is added (from any source), add their matches if schedule exists
                 addMatchesForNewTeam(payload.new.id).then(fetchData);
             })
-            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'teams' }, fetchData)
-            .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'teams' }, fetchData)
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'teams', filter: `service_id=eq.${serviceId}` }, fetchData)
+            .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'teams', filter: `service_id=eq.${serviceId}` }, fetchData)
             .subscribe();
 
         return () => { supabase.removeChannel(sub); };
@@ -44,6 +44,10 @@ export const AdminDashboard = () => {
         const { data: allMatches } = await supabase.from('matches').select('*').eq('service_id', serviceId);
 
         if (!allTeams || !allMatches || allMatches.length === 0) return; // No schedule yet
+
+        // Safety: only handle teams that belong to this service
+        const teamBelongsHere = allTeams.some(t => t.id === newTeamId);
+        if (!teamBelongsHere) return;
 
         const otherTeams = allTeams.filter(t => t.id !== newTeamId);
         const maxNum = allMatches.reduce((max, m) => Math.max(max, m.match_number), 0);
@@ -89,11 +93,20 @@ export const AdminDashboard = () => {
     // --- Round-Robin Schedule Generation ---
     const generateSchedule = async () => {
         if (teams.length < 2) return alert('Need at least 2 teams!');
+        const totalExpected = (teams.length * (teams.length - 1)) / 2;
         if (matches.length > 0) {
-            if (!confirm('A schedule already exists. Overwrite it?')) return;
+            if (!confirm(`Clear all ${matches.length} existing matches and regenerate ${totalExpected} matches for ${teams.length} teams?`)) return;
         }
 
-        await supabase.from('matches').delete().eq('service_id', serviceId);
+        // Delete ALL existing matches for this service
+        const { error: delErr } = await supabase.from('matches').delete().eq('service_id', serviceId);
+        if (delErr) {
+            console.error('Delete error:', delErr);
+            return alert('Failed to clear old schedule: ' + delErr.message);
+        }
+
+        // Small pause to let delete commit before inserting
+        await new Promise(r => setTimeout(r, 200));
 
         const shuffled = [...teams].sort(() => 0.5 - Math.random());
         const newMatches: any[] = [];
@@ -117,9 +130,12 @@ export const AdminDashboard = () => {
             }
         }
 
-        const { error } = await supabase.from('matches').insert(newMatches);
-        if (error) console.error('Error generating schedule', error);
-        fetchData();
+        const { error: insertErr } = await supabase.from('matches').insert(newMatches);
+        if (insertErr) {
+            console.error('Insert error:', insertErr);
+            alert('Error generating schedule: ' + insertErr.message);
+        }
+        await fetchData();
     };
 
     // --- Score & Match Controls ---
