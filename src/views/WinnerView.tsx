@@ -111,7 +111,7 @@ export const WinnerView = () => {
 
             {/* WINNERS label */}
             <div className="slide-in-3" style={{
-                fontSize: '3rem', fontWeight: 900,
+                fontSize: '6rem', fontWeight: 900,
                 textTransform: 'uppercase', letterSpacing: '0.35em',
                 color: '#ffffff99', marginBottom: 32,
             }}>
