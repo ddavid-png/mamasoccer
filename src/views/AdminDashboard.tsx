@@ -164,8 +164,12 @@ export const AdminDashboard = () => {
 
     // --- Team Management ---
     const deleteTeam = async (teamId: string) => {
-        if (!confirm('Delete this team? Their matches will also be removed.')) return;
-        await supabase.from('matches').delete().or(`team1_id.eq.${teamId},team2_id.eq.${teamId}`);
+        if (!confirm('Delete this team? Their pending matches will be removed, but completed games are preserved.')) return;
+        // Only remove pending matches — completed matches stay so other teams keep their stats
+        await supabase.from('matches')
+            .delete()
+            .or(`team1_id.eq.${teamId},team2_id.eq.${teamId}`)
+            .eq('status', 'pending');
         await supabase.from('teams').delete().eq('id', teamId);
     };
 
