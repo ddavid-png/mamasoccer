@@ -122,13 +122,13 @@ export const TvDisplay = () => {
             {/* HEADER */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, zIndex: 10, flexShrink: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <img src="/LISBOA CMYK.png" alt="Mama Lisboa" style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'contain', flexShrink: 0 }} />
-                    <h1 style={{ fontSize: '1.75rem', fontWeight: 900, textTransform: 'uppercase', margin: 0, lineHeight: 1 }}>
-                        <span style={{ background: '#FFFF00', color: 'black', padding: '0 8px' }}>Mama</span> Shelter Foosball
+                    <img src="/LISBOA CMYK.png" alt="Mama Lisboa" style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'contain', flexShrink: 0 }} />
+                    <h1 style={{ fontSize: '1.6rem', fontWeight: 900, textTransform: 'uppercase', margin: 0, lineHeight: 1 }}>
+                        Mama Lisboa <span style={{ background: '#FFFF00', color: 'black', padding: '0 8px' }}>Foosball</span> Tournament
                     </h1>
                 </div>
-                <div className={isDanger ? 'tv-timer-pulse' : ''} style={{ fontWeight: 900, textTransform: 'uppercase', padding: '4px 16px', border: '4px solid ' + timerColor, color: timerColor, background: timerColor + '20' }}>
-                    <span style={{ fontSize: '4rem', lineHeight: 1 }}>{formatTime(timeRemaining)}</span>
+                <div className={isDanger ? 'tv-timer-pulse' : ''} style={{ fontWeight: 900, textTransform: 'uppercase', padding: '4px 24px', border: '4px solid ' + timerColor, color: timerColor, background: timerColor + '20' }}>
+                    <span style={{ fontSize: '6rem', lineHeight: 1 }}>{formatTime(timeRemaining)}</span>
                 </div>
             </div>
 
